@@ -4,6 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>みんなの英単語帳</title>
+    <script>
+        async function translateWord(sourceLang, targetLang, word, outputElement) {
+            const response = await fetch('deepl.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    word: word,
+                    sourceLang: sourceLang,
+                    targetLang: targetLang
+                })
+            });
+
+            const data = await response.json();
+            if (data.translatedText) {
+                document.querySelector(outputElement).value = data.translatedText;
+            } else {
+                alert("翻訳に失敗しました: " + data.error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // 英語から日本語への翻訳
+            document.querySelector('input[value="E→J"]').addEventListener("click", function(event) {
+                event.preventDefault();
+                const englishText = document.querySelector('input[name="english"]').value;
+                translateWord('EN', 'JA', englishText, 'input[name="japanese"]');
+            });
+
+            // 日本語から英語への翻訳
+            document.querySelector('input[value="J→E"]').addEventListener("click", function(event) {
+                event.preventDefault();
+                const japaneseText = document.querySelector('input[name="japanese"]').value;
+                translateWord('JA', 'EN', japaneseText, 'input[name="english"]');
+            });
+        });
+    </script>
 </head>
 <body>
 <header>
@@ -19,8 +57,8 @@
         <fieldset>
             <legend>英単語を記録</legend>
             <label>Name：<input  type="text" name="name"></label><br>
-            <label>English Word:<input type="text" name="english"></label><br>
-            <label>Japanese Word:<input type="text" name="japanese"></label><br>
+            <label>English Word:<input type="text" name="english"><input type="button" value="E→J"></label><br>
+            <label>Japanese Word:<input type="text" name="japanese"></label><input type="button" value="J→E"></label><br>
             <label>Tag:
             <select name="tag">
             <option>TOEIC</option>
