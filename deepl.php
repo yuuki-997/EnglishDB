@@ -1,6 +1,6 @@
 <?php
 $deepl_api_url = 'https://api-free.deepl.com/v2/translate';
-$your_api_key = 'XX';  // DeepL APIキーを設定
+$your_api_key = '';  // DeepL APIキーを設定
 
 // クライアントから送られてきたデータを取得
 $word = $_POST['word'];
